@@ -1,36 +1,46 @@
-import { useState } from "react"
-import { useMovies } from "./hooks/useMovies"
-import { useGenres } from "./hooks/useGenres"
-import MovieList from "./components/MovieList"
-import SearchBar from "./components/SearchBar"
+import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import { storage } from "./utils/storage";
+import type { Movie } from "./types";
 
 function App() {
-  const { movies, isLoading, error } = useMovies();
-  const { genres, isLoading: genresLoading, error: genresError } = useGenres()
-  const [query, setQuery] = useState("");
-  const [minRating, setMinRating] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [theme, setTheme] = useState(storage.getTheme);
+  const [favorites, setFavorites] = useState(storage.getFavorites);
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
 
-  const filteredMovies = movies.filter((movie) => {
-    const matchesQuery = movie.title.toLowerCase().includes(query.toLowerCase());
-    const matchingRating = movie.vote_average >= minRating;
-    return matchesQuery && matchingRating;
-  });
+  useEffect(() => { storage.setTheme(theme); }, [theme]);
+
+  function toggleFavorite(movie: Movie) {
+    setFavorites(storage.toggleFavorite(movie));
+  }
 
   return (
-    <div>
-      <h1>Movie App</h1>
-      <SearchBar query={query} onChange={setQuery} />
-      {genresLoading && <p role="status">Loading genres...</p>}
-      {genresError && <p role="alert">{genresError}</p>}
-      {isLoading ? (
-        <p role="status">Loading movies...</p>
-      ) : error ? (
-        <p role="alert">{error}</p>
-      ) : (
-        <MovieList movies={filteredMovies} genres={genres} />
-      )}
-    </div>
-  )
+    <BrowserRouter>
+      <div className="app-layout">
+        <Header
+          search={searchQuery}
+          onSearch={setSearchQuery}
+          onlyFavorites={onlyFavorites}
+          onToggleFavorites={() => setOnlyFavorites(value => !value)}
+          theme={theme}
+          onToggleTheme={() =>
+            setTheme(current => current === "dark" ? "light" : "dark")
+          }
+          favCount={favorites.length}
+        />
+        <Routes>
+          <Route path="/" element={<HomePage searchQuery={searchQuery}
+            favorites={favorites} onlyFavorites={onlyFavorites} onToggleFavorite={toggleFavorite} />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
-
-export default App
+export default App;
