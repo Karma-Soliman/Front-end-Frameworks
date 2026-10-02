@@ -29,13 +29,15 @@ export const movieService = {
             const results = SAMPLE_MOVIES.filter(movie => movie.title.toLowerCase().includes(query.toLowerCase()));
             return { results, total_pages: 1, total_results: results.length, isLiveApi: false }
         }
+        const baseUrl =
+            import.meta.env.VITE_TMDB_BASE_URL || "https://api.themoviedb.org/3";
         // with token
         const endpoint = query ? "/search/movie" : "/movie/popular";
         const params = new URLSearchParams({ language: "en-US", page: String(page), })
         if (query) {
             params.set("query", query);
         }
-        const response = await fetch(`${import.meta.env.VITE_TMDB_BASE_URL}${endpoint}?${params}`,
+        const response = await fetch(`${baseUrl}${endpoint}?${params}`,
             {
                 signal,
                 headers: {
