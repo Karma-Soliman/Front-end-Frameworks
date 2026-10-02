@@ -1,11 +1,10 @@
-import { T } from "vitest/dist/chunks/reporters.d.BuRON0I0.js"
 import type { Movie, Theme } from "../types"
 
 const FAVORITES_KEY = "cinegrid_favorites"
 const THEME_KEY = "cinegrid_theme"
 const API_KEY = "cinegrid_api_key"
 
-export function getFavorties(): Movie[] {
+export function getFavorites(): Movie[] {
   try {
     const saved = localStorage.getItem(FAVORITES_KEY)
     const parsed = JSON.parse(saved ?? "[]")
@@ -16,7 +15,7 @@ export function getFavorties(): Movie[] {
 }
 
 export function toggleFavorite(movie: Movie): Movie[] {
-  const favorites = getFavorties()
+  const favorites = getFavorites()
   const alrSaved = favorites.some((favorite) => favorite.id === movie.id)
   const updated = alrSaved
     ? favorites.filter((favorite) => favorite.id !== movie.id)
@@ -44,6 +43,6 @@ export function setApiKey(key: string): void {
 }
 
 export const storage = {
-    getFavorties, toggleFavorite, getTheme, setTheme, getApiKey, setApiKey,
+    getFavorites, toggleFavorite, getTheme, setTheme, getApiKey, setApiKey,
 }
 
