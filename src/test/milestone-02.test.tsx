@@ -40,6 +40,7 @@ const MOCK_MOVIES: Movie[] = [
   {
     id: 76600,
     title: 'Avatar: The Way of Water',
+    original_title: 'Avatar: The Way of Water',
     overview: 'Set more than a decade after the events of the first film.',
     poster_path: '/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
     backdrop_path: '/s16H6tpK2utvwpapmarhZVPAHJJ.jpg',
@@ -53,6 +54,7 @@ const MOCK_MOVIES: Movie[] = [
   {
     id: 603692,
     title: 'John Wick: Chapter 4',
+    original_title: 'John Wick: Chapter 4',
     overview: 'With the price on his head ever increasing.',
     poster_path: '/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg',
     backdrop_path: '/fu8mPaVZ9Z3Yw2yUV5qzGnYzDXC.jpg',

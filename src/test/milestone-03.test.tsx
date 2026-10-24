@@ -31,6 +31,7 @@ import type { Movie } from '../types'
 const MOCK_MOVIE: Movie = {
   id: 640146,
   title: 'Ant-Man and the Wasp: Quantumania',
+  original_title: 'Ant-Man and the Wasp: Quantumania',
   overview: 'Super-Hero partners Scott Lang and Hope van Dyne explore the Quantum Realm.',
   poster_path: '/ngl2FKBlU4fhbdsrtdom9LVLBXw.jpg',
   backdrop_path: '/i7A7bRwOZMGO3tUDRa3GVDNipme.jpg',
@@ -45,6 +46,7 @@ const MOCK_MOVIE: Movie = {
 const MOCK_MOVIE_2: Movie = {
   id: 315162,
   title: 'Puss in Boots: The Last Wish',
+  original_title: 'Puss in Boots: The Last Wish',
   overview: 'Puss in Boots discovers that his passion for adventure has taken its toll.',
   poster_path: '/kuf6dutpsT0vSVehic3EZIqkOBt.jpg',
   backdrop_path: '/4cBaKfysPM4KuFPpE7hpTJHYdmW.jpg',

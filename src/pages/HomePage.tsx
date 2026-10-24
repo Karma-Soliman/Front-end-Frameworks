@@ -5,18 +5,18 @@ import MovieList from "../components/MovieList";
 import FilterBar from "../components/FilterBar";
 import StatsBanner from "../components/StatsBanner";
 import MovieModal from "../components/MovieModal";
+import { useAppContext } from "../context/AppContext";
 import type { Movie, SortOption, ViewMode } from "../types";
 
 type HomePageProps = {
   searchQuery?: string
-  favorites?: Movie[]
   onlyFavorites?: boolean
-  onToggleFavorite?: (movie: Movie) => void
   refreshKey?: number
 }
 
-function HomePage({ searchQuery = "", favorites = [], onlyFavorites = false,
-  onToggleFavorite, refreshKey = 0, }: HomePageProps) {
+function HomePage({ searchQuery = "", onlyFavorites = false,
+  refreshKey = 0, }: HomePageProps) {
+  const { favorites } = useAppContext();
   const [selectedGenre, setSelectedGenre] = useState(0);
   const [sort, setSort] = useState<SortOption>("popularity");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -58,13 +58,12 @@ function HomePage({ searchQuery = "", favorites = [], onlyFavorites = false,
       ) : error ? (
         <p className="status-message error-message" role="alert">{error}</p>
       ) : (
-        <MovieList movies={movies} genres={genres} favorites={favorites}
-          onToggleFavorite={onToggleFavorite} viewMode={viewMode} onSelectMovie={setSelectedMovie} />
+        <MovieList movies={movies} genres={genres}
+          viewMode={viewMode} onSelectMovie={setSelectedMovie} />
       )}
       {selectedMovie && (
     <MovieModal
-      movie={selectedMovie} genres={genres} isFavorite={favorites.some(movie => movie.id === selectedMovie.id)}
-      onToggleFavorite={onToggleFavorite}
+      movie={selectedMovie} genres={genres}
       onClose={() => setSelectedMovie(null)}
     />
   )}

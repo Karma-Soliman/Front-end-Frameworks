@@ -1,26 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { AppProvider } from "./context/AppContext"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import ApiConfigModal from "./components/ApiConfigModal"
-import { storage } from "./utils/storage";
-import type { Movie } from "./types";
+import ApiConfigModal from "./components/ApiConfigModal";
 
-function App() {
+function AppContent() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [theme, setTheme] = useState(storage.getTheme);
-  const [favorites, setFavorites] = useState(storage.getFavorites);
   const [onlyFavorites, setOnlyFavorites] = useState(false);
   const [isApiConfigOpen, setIsApiConfigOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
-
-  useEffect(() => { storage.setTheme(theme); }, [theme]);
-
-  function toggleFavorite(movie: Movie) {
-    setFavorites(storage.toggleFavorite(movie));
-  }
 
   return (
     <BrowserRouter>
@@ -30,11 +21,6 @@ function App() {
           onSearch={setSearchQuery}
           onlyFavorites={onlyFavorites}
           onToggleFavorites={() => setOnlyFavorites((value) => !value)}
-          theme={theme}
-          onToggleTheme={() =>
-            setTheme((current) => (current === "dark" ? "light" : "dark"))
-          }
-          favCount={favorites.length}
           onOpenApiConfig={() => setIsApiConfigOpen(true)}
         />
         <Routes>
@@ -43,9 +29,7 @@ function App() {
             element={
               <HomePage
                 searchQuery={searchQuery}
-                favorites={favorites}
                 onlyFavorites={onlyFavorites}
-                onToggleFavorite={toggleFavorite}
                 refreshKey={refreshKey}
               />
             }
@@ -66,4 +50,11 @@ function App() {
     </BrowserRouter>
   )
 }
-export default App;
+function App() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
+  )
+}
+export default App

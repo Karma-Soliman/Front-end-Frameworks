@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useAppContext } from "../context/AppContext";
 import { Heart } from "lucide-react";
 import type { Movie, Genre } from "../types";
 import { getPosterUrl } from "../data/sampleMovies";
@@ -7,13 +7,11 @@ type MovieCardProp = {
   movie: Movie;
   genres?: Genre[];
   onClick?: () => void;
-  isFavorite?: boolean;
-  onToggleFavorite?: (movie: Movie) => void;
 };
 
-function MovieCard({ movie, genres = [], onClick, isFavorite, onToggleFavorite }: MovieCardProp) {
-  const [localFavorite, setLocalFavorite] = useState(false);
-  const saved = isFavorite ?? localFavorite;
+function MovieCard({ movie, genres = [], onClick }: MovieCardProp) {
+  const { isFavorite, toggleFavorite } = useAppContext();
+  const saved = isFavorite(movie.id);
   const movieGenres = genres.filter(genre => movie.genre_ids.includes(genre.id));
   return (
     <article className="movie-card">
@@ -28,11 +26,7 @@ function MovieCard({ movie, genres = [], onClick, isFavorite, onToggleFavorite }
           className={`favorite-btn card-favorite${saved ? " is-favorite" : ""}`}
           aria-label={saved ? "Remove from favourites" : "Add to favourites"}
           aria-pressed={saved}
-          onClick={() =>
-            onToggleFavorite
-              ? onToggleFavorite(movie)
-              : setLocalFavorite(!saved)
-          }
+          onClick={() => toggleFavorite(movie)}
         >
           <Heart
             size={17}

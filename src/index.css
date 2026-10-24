@@ -643,24 +643,35 @@ select {
 /* Compact List View */
 .movies-grid.compact-view .movie-card {
   flex-direction: row;
-  height: 120px;
+  min-height: 150px;
+  height: auto;
 }
 
 .movies-grid.compact-view .poster-wrapper {
   width: 90px;
   aspect-ratio: auto;
-  height: 100%;
+  height: auto;
+  align-self: stretch;
   flex-shrink: 0;
 }
 
+.movies-grid.compact-view .poster-img {
+  position: absolute;
+  inset: 0;
+}
+
 .movies-grid.compact-view .movie-card-info {
+  min-width: 0;
   justify-content: center;
   gap: 8px;
 }
 
 .movies-grid.compact-view .movie-card-title {
   font-size: 1.1rem;
-  -webkit-line-clamp: 1;
+  display: block;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  flex-shrink: 0;
 }
 
 /* Pagination */

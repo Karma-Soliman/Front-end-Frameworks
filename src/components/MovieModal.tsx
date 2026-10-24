@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from "react"
+import { useAppContext } from "../context/AppContext"
 import { Heart, X, Youtube } from "lucide-react"
 import type { Movie, Genre } from "../types"
 import { getPosterUrl, getBackdropUrl } from "../data/sampleMovies"
@@ -6,18 +7,16 @@ import { getPosterUrl, getBackdropUrl } from "../data/sampleMovies"
 type MovieModalProps = {
   movie: Movie
   genres: Genre[]
-  isFavorite: boolean
-  onToggleFavorite?: (movie: Movie) => void
   onClose: () => void
 }
 
 function MovieModal({
   movie,
   genres,
-  isFavorite,
-  onToggleFavorite,
   onClose,
 }: MovieModalProps) {
+  const { isFavorite, toggleFavorite } = useAppContext()
+  const saved = isFavorite(movie.id)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const titleId = useId()
 
@@ -111,20 +110,18 @@ function MovieModal({
             </p>
 
             <div className="modal-footer-actions">
-              {onToggleFavorite && (
                 <button
                   className="btn-primary"
-                  aria-pressed={isFavorite}
-                  onClick={() => onToggleFavorite(movie)}
+                  aria-pressed={saved}
+                  onClick={() => toggleFavorite(movie)}
                 >
                   <Heart
                     size={18}
-                    fill={isFavorite ? "currentColor" : "none"}
+                    fill={saved ? "currentColor" : "none"}
                     aria-hidden="true"
                   />
-                  {isFavorite ? "Remove from watchlist" : "Add to watchlist"}
+                  {saved ? "Remove from watchlist" : "Add to watchlist"}
                 </button>
-              )}
 
               <a
                 className="btn-secondary"

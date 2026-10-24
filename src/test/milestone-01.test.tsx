@@ -35,6 +35,7 @@ import type { Movie } from "../types";
 const MOCK_MOVIE: Movie = {
   id: 1,
   title: "Inception",
+  original_title: "Inception",
   overview:
     "A thief who steals corporate secrets through dream-sharing technology.",
   poster_path: "/inception.jpg",
