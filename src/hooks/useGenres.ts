@@ -31,6 +31,9 @@ export function useGenres() {
                     throw new Error(`Failed to fetch genre (${response.status})`);
                 }
                 const data: { genres: Genre[] } = await response.json();
+                if (!Array.isArray(data.genres)) {
+                    throw new Error("Could not load genres: invalid response.");
+                }
                 if (!controller.signal.aborted) {
                     setGenre(data.genres);
                 }
