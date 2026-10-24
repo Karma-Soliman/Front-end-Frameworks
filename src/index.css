@@ -809,9 +809,20 @@ select {
 }
 
 .modal-title {
+  color: var(--text-main);
   font-size: 1.8rem;
   font-weight: 800;
   line-height: 1.25;
+}
+
+dialog.movie-details-modal {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  color: var(--text-main);
 }
 
 .modal-original-title {
@@ -1059,4 +1070,42 @@ select {
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+dialog.api-config-modal {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  color: var(--text-main);
+}
+
+.api-config-panel {
+  max-width: 520px;
+  padding: 32px;
+}
+
+.api-config-panel h2 {
+  padding-right: 40px;
+}
+
+.api-config-panel p {
+  margin: 16px 0;
+  color: var(--text-muted);
+}
+
+.api-config-panel label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.api-config-panel input {
+  padding: 12px;
+}
+
+.api-config-panel .modal-footer-actions {
+  margin-top: 24px;
+  flex-wrap: wrap;
 }

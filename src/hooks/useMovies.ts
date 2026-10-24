@@ -3,15 +3,16 @@ import { movieService } from "../services/movieService"
 import type { Movie, SortOption } from "../types"
 
 type UseMoviesOptions = {
-  search?: string;
-  genre?: number;
-  sort?: SortOption;
-  onlyFavorites?: boolean;
-  favoritesKey?: string;
+  search?: string
+  genre?: number
+  sort?: SortOption
+  onlyFavorites?: boolean
+  favoritesKey?: string
+  refreshKey?: number;
 }
 
 export function useMovies({
-  search = "", genre = 0, sort = "popularity", onlyFavorites = false, favoritesKey = "",
+  search = "", genre = 0, sort = "popularity", onlyFavorites = false, favoritesKey = "", refreshKey = 0,
 }: UseMoviesOptions = {}) {
   const [movies, setMovies] = useState<Movie[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -25,7 +26,10 @@ export function useMovies({
       setError(null)
       try {
         const data = await movieService.fetchMovies({
-          search, genre, sort, onlyFavorites,
+          search,
+          genre,
+          sort,
+          onlyFavorites,
           signal: controller.signal,
         })
         if (!controller.signal.aborted) {
@@ -47,7 +51,7 @@ export function useMovies({
     return () => {
       controller.abort()
     }
-  }, [search, genre, sort, onlyFavorites, favoritesKey])
+  }, [search, genre, sort, onlyFavorites, favoritesKey, refreshKey])
 
   return { movies, isLoading, error, isLiveApi }
 }
