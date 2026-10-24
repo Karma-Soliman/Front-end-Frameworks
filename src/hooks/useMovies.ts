@@ -1,11 +1,22 @@
 import { useState, useEffect } from "react"
 import { movieService } from "../services/movieService"
-import type { Movie } from "../types"
+import type { Movie, SortOption } from "../types"
 
-export function useMovies() {
+type UseMoviesOptions = {
+  search?: string;
+  genre?: number;
+  sort?: SortOption;
+  onlyFavorites?: boolean;
+  favoritesKey?: string;
+}
+
+export function useMovies({
+  search = "", genre = 0, sort = "popularity", onlyFavorites = false, favoritesKey = "",
+}: UseMoviesOptions = {}) {
   const [movies, setMovies] = useState<Movie[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isLiveApi, setIsLiveApi] = useState(false)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -14,10 +25,12 @@ export function useMovies() {
       setError(null)
       try {
         const data = await movieService.fetchMovies({
+          search, genre, sort, onlyFavorites,
           signal: controller.signal,
         })
         if (!controller.signal.aborted) {
           setMovies(data.results)
+          setIsLiveApi(data.isLiveApi)
         }
       } catch (err) {
         if (controller.signal.aborted) return
@@ -34,7 +47,7 @@ export function useMovies() {
     return () => {
       controller.abort()
     }
-  }, [])
+  }, [search, genre, sort, onlyFavorites, favoritesKey])
 
-  return { movies, isLoading, error }
+  return { movies, isLoading, error, isLiveApi }
 }
