@@ -49,9 +49,14 @@ export const movieService = {
                 const matchesGenre = !hasGenre || movie.genre_ids.includes(genre!);
                 return matchesSearch && matchesGenre;
             });
-            const results = sortMovies(filtered, sort);
+            const sorted = sortMovies(filtered, sort);
+            const pageSize = 20;
+            const results = sorted.slice((page - 1) * pageSize, page * pageSize);
             return {
-                results, total_pages: 1, total_results: results.length, isLiveApi: false,
+                results,
+                total_pages: Math.max(1, Math.ceil(sorted.length / pageSize)),
+                total_results: sorted.length,
+                isLiveApi: false,
             };
         }
        
@@ -83,7 +88,7 @@ export const movieService = {
 
         return {
             results: sortMovies(filtered,sort),
-            total_pages: data.total_pages,
+            total_pages: Math.max(1, Math.min(data.total_pages, 500)),
             total_results: data.total_results,
             isLiveApi: true
         };

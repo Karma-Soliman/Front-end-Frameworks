@@ -5,6 +5,7 @@ import MovieList from "../components/MovieList";
 import FilterBar from "../components/FilterBar";
 import StatsBanner from "../components/StatsBanner";
 import MovieModal from "../components/MovieModal";
+import Pagination from "../components/Pagination";
 import { useAppContext } from "../context/AppContext";
 import type { Movie, SortOption, ViewMode } from "../types";
 
@@ -24,7 +25,20 @@ function HomePage({ searchQuery = "", onlyFavorites = false,
 
   const favoritesKey = onlyFavorites ? favorites.map(movie => movie.id).join(",") : "";
 
-  const { movies, isLoading, error, isLiveApi } = useMovies({search: searchQuery, genre: selectedGenre, sort, onlyFavorites, favoritesKey, refreshKey,});
+  const filterKey = JSON.stringify([searchQuery, selectedGenre, sort, onlyFavorites, favoritesKey, refreshKey]);
+  const [pagination, setPagination] = useState({ filterKey, page: 1 });
+  if (pagination.filterKey !== filterKey) {
+    setPagination({ filterKey, page: 1 });
+  }
+  const page = pagination.filterKey === filterKey ? pagination.page : 1;
+
+  const { movies, isLoading, error, isLiveApi, totalPages } = useMovies({search: searchQuery, genre: selectedGenre, sort, onlyFavorites, favoritesKey, refreshKey, page});
+
+  function changePage(nextPage: number) {
+    if (isLoading || nextPage < 1 || nextPage > totalPages) return;
+    setPagination({ filterKey, page: nextPage });
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
   const { genres, isLoading: genresLoading, error: genresError } = useGenres(refreshKey,);
   const genreName =
     selectedGenre === 0
@@ -61,6 +75,7 @@ function HomePage({ searchQuery = "", onlyFavorites = false,
         <MovieList movies={movies} genres={genres}
           viewMode={viewMode} onSelectMovie={setSelectedMovie} />
       )}
+      <Pagination page={page} totalPages={totalPages} isLoading={isLoading} onPageChange={changePage} />
       {selectedMovie && (
     <MovieModal
       movie={selectedMovie} genres={genres}
